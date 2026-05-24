@@ -1,0 +1,12 @@
+export const GameState = {
+  CREATED: 'CREATED',
+  STARTED: 'STARTED',
+  AT_CHECKPOINT: 'AT_CHECKPOINT',
+  PUZZLE_ACTIVE: 'PUZZLE_ACTIVE',
+  PUZZLE_SOLVED: 'PUZZLE_SOLVED',
+  WAITING_FOR_VALIDATION: 'WAITING_FOR_VALIDATION',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+} as const;
+
+export type GameState = typeof GameState[keyof typeof GameState];

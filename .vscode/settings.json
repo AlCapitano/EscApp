@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^powershell -NoProfile -Command \"Set-Location 'C:\\\\Users\\\\ornit\\\\Documents\\\\EscApp\\\\Git\\\\EscApp\\\\backend'; npm run start:dev\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

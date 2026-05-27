@@ -1,10 +1,12 @@
-FROM node:24-alpine
+FROM node:24-bullseye-slim
 
 WORKDIR /usr/src/app
 
+# Install production dependencies (omit dev to keep image small)
 COPY package*.json ./
-RUN npm install
+RUN npm ci --omit=dev
 
+# Copy app source and build
 COPY . .
 RUN npm run build
 

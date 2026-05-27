@@ -1,0 +1,21 @@
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres:5432/app_db?schema=public
+      JWT_ACCESS_TOKEN_SECRET: access-secret
+      JWT_ACCESS_TOKEN_EXPIRATION: 60m
+      JWT_REFRESH_TOKEN_SECRET: refresh-secret
+      JWT_REFRESH_TOKEN_EXPIRATION: 1d
+    volumes:
+      - backend_node_modules:/usr/src/app/node_modules
+      - backend_src:/usr/src/app/src
+      - ./backend/prisma:/usr/src/app/prisma
+      - ./backend/.env.docker:/usr/src/app/.env.docker
+    ports:
+      - "3000:3000"
+    command: sh -c "npm run prisma:generate && sleep 2 && npm run prisma:db:push && npm run start:dev"

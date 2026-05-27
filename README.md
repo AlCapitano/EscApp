@@ -1,6 +1,9 @@
 # EscApp
 City Escape Application
 
+## Project goal
+Make an application for mobile phone to use in city escape games.
+
 ## Overview
 EscApp is a city escape game prototype built with a NestJS backend, Prisma ORM, and a Docker-based local development stack. The app includes user authentication, admin APIs, route and checkpoint management, and game session state tracking.
 
@@ -16,26 +19,22 @@ EscApp is a city escape game prototype built with a NestJS backend, Prisma ORM, 
 
 ## Quick start
 1. Install backend dependencies:
+(See readme in backend directory)
 
-```bash
-cd backend
-npm install
-```
-
-2. Create environment variables:
-
-```bash
-cd backend
-copy .env.example .env
-```
-
-3. Start the local development stack with Docker Compose:
+2. Install Docker desktop and start the local development stack with Docker Compose:
 
 ```bash
 docker compose up --build
 ```
+Do this for both postgres and backend:
+```bash
+docker compose up postgres --build
+```
+```bash
+docker compose up backend --build
+```
 
-4. If you prefer to run only the backend without Docker, make sure `DATABASE_URL` points to a running PostgreSQL instance and then:
+PS. If you prefer to run only the backend without Docker, make sure `DATABASE_URL` points to a running PostgreSQL instance and then:
 
 ```bash
 cd backend
@@ -43,8 +42,8 @@ npm run prisma:generate
 npm run start:dev
 ```
 
-## Backend commands
-From the `backend/` folder:
+3. Backend commands
+From the `backend/` folder! 
 
 - `npm run start:dev` — start NestJS in watch mode
 - `npm run build` — compile the backend
@@ -80,14 +79,9 @@ The backend exposes routes such as:
 - `GET /game-sessions`
 
 ## Notes
-- The application is currently focused on the backend prototype and game state flow.
+- Current build focus is backend prototype, frontend prototype and game state flow.
 - Docker Compose is configured to expose the backend on port `3000`.
-- Use `backend/.env.example` as the starting point for local configuration.
-
-## Project goals
-- NestJS backend with strict TypeScript
-- Prisma data modeling for game entities
-- Auth/role-based user and admin API separation
-- Game session state management
-- Static UI support and future real-time enhancements
-
+- you can query if everything is running by typing 
+```bash
+curl http://localhost:3000
+```

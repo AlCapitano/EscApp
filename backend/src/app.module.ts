@@ -14,7 +14,7 @@ import { GameSessionModule } from './game-session/game-session.module';
     ConfigModule.forRoot({ isGlobal: true }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'frontend'),
-      exclude: ['/auth*', '/admin*', '/game-sessions*'],
+      exclude: ['/auth', '/admin', '/game-sessions'],
     }),
     PrismaModule,
     AuthModule,
@@ -25,4 +25,3 @@ import { GameSessionModule } from './game-session/game-session.module';
   providers: [AppService],
 })
 export class AppModule {}
-

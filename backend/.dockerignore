@@ -1,7 +1,4 @@
 node_modules
 dist
-.env
 .venv
 npm-debug.log
-Dockerfile
-docker-compose.yml

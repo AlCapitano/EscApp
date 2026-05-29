@@ -1,11 +1,45 @@
 # History of Gemini Interactions
-
+2026_05_28
 - Added new interaction rules for history coherence, project coherence, and implementing best practices.
 - Rewrote the frontend from Kotlin Multiplatform to React with TypeScript to support the latest Java SDK.
 - The mobile strategy is to build a web-based proof of concept first, with the ultimate goal of a native mobile app.
 - Implemented basic frontend UI, routing, and authentication flow. Fixed backend npm vulnerabilities.
 - Scaffolded the frontend UI with placeholders for the Main Menu, Game Screen, and Leaderboard.
 - Resolved authentication persistence and backend database connection issues. Implemented premade admin and mock user accounts. Confirmed successful login and full application functionality.
-- Created `start_escapp.bat` to automate application shutdown, backend/frontend initialization, and browser launch.
-- Enhanced `start_escapp.bat` to include Docker process management, ensuring a clean Docker state before starting services.
-- Modified `start_escapp.bat` to remove aggressive `taskkill` commands for Docker Desktop and port-specific processes, relying instead on `docker-compose down -v` for graceful service shutdown and port release. The frontend `npm start` now handles its own port binding without forceful termination.
+- Created `start_escapp.bat` to automate backend/frontend initialization using `docker-compose down -v` for graceful service shutdown and port release, the frontend `npm start` now handles its own port binding without forceful termination and browser launch.
+2026_05_29
+- Implemented a timer that after 7 seconds of no input the sidebar collapses.
+- Fixed checkpoint visibility issue by initializing `unlockedCheckpoints` with `[0]` to ensure only valid, unlocked checkpoints are displayed.
+- Created `GameContext.tsx` for managing game-specific state (current puzzle, score, etc.).
+- Integrated `GameProvider` into `App.tsx` to make game state available application-wide.
+- Refactored `GameScreen.tsx` to consume game state and actions from `GameContext`.
+- Fixed infinite loop in `GameScreen.tsx` by memoizing context functions in `GameContext.tsx` with `useCallback`.
+- Corrected checkpoint unlocking logic in `GameScreen.tsx`.
+- Implemented a "Not Found (404)" page as part of advanced routing.
+- Created `gameSessionService.ts` to interact with the backend's game session APIs.
+- Integrated game session creation into `GameContext` and `MainMenu`.
+- Implemented admin feature to modify checkpoints:
+  - Created backend `CheckpointModule` with a protected `PATCH` endpoint.
+  - Created frontend `checkpointService.ts`.
+  - Created `AdminCheckpoints.tsx` page for admins to edit checkpoint details.
+- Implemented draggable checkpoint pins for admins on the main menu map using `react-draggable`.
+- Implemented admin feature to view user progress:
+  - Added `unlockedCheckpoints` to the `User` model in `schema.prisma`.
+  - Created a backend endpoint to fetch user progress.
+  - Created a frontend `UserProgressPage` to display the data.
+- Implemented admin feature to manage the leaderboard:
+  - Added `DELETE` endpoints to the `GameSessionController` for deleting game sessions.
+  - Created a frontend `AdminLeaderboardPage` to interact with these APIs.
+- Fixed a critical security issue by enabling the Axios request interceptor in `api.ts` to send the JWT token with all authenticated requests.
+- Fixed login and admin role recognition issues:
+  - Corrected `accessToken` vs `access_token` destructuring in `authService.ts`.
+  - Ensured `getProfile()` is called after login to fetch full user data.
+  - Handled role casing (`"ADMIN"` to `'admin'`) in `authService.ts`.
+  - Updated `User` interface (`username` to `name`).
+  - Adjusted `baseURL` in `api.ts` to `http://localhost:3000` for stable local development.
+- Fixed leaderboard deletion:
+  - Added `onDelete: Cascade` to `CheckpointAttempt` in `schema.prisma`.
+  - Fixed TypeScript error in backend `GameSessionService`'s error handling.
+  - Confirmed backend delete controller methods are reached by frontend requests.
+  - Added backend seeding for a dummy game session to facilitate testing.
+- Made the `MainMenu.tsx` page responsive by using more flexible CSS units and layout properties.

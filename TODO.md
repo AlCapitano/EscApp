@@ -1,53 +1,33 @@
 # To-Do List
 
-This file tracks the remaining tasks to achieve a working prototype application for mobile phones, based on the rules in `GEMINI.md`.
+This file tracks the remaining tasks to achieve a working prototype application for mobile phones, based on the rules in `GEMINI.md`. For context, check the last section/day log in the `GMN_HIST.md` file for recent changes done and context.
+
 ## High Priority (Prototype)
-- **Implement Frontend UI:**
-  - Main Menu (DONE)
-  - Game Screen (DONE)
-  - Navigation structure for sidebar and back button for Game Screen (DONE)
-  - Map-based game entry and Admin-only Game Selection (DONE)
-  - Leaderboard (DONE)
-  - Implement sidebar to be collapsible with an icon to expand/collapse when the user clicks/hovers. (DONE)
-  - Implement a timer that after 7 seconds of no input the sidebar collapses.
-- **Implement Frontend Logic:**
-  - Game state management
-  - Advanced routing
-- **Integrate Frontend with Backend:**
-  - Connect to game session APIs (Basic authentication is done, game-specific APIs need to be integrated)
+- **Implement answer structure:**
+  - Link some dummy answers to checkpoints to allow logic checking and UI debugging for users.
+- **User Monitoring:**
+  - Fix the user monitoring to be able to manage any user profiles and their information that are registered in the database.
+  - Give admins the possibility to override checkpoints for specific users.
 - **Admin/User Experience Differentiation:**
-  - **Admin:**
-    - Modify checkpoints geolocation and position of checkpoint on main menu screen.
-    - View user checkpoint progress.
-    - Manage leaderboard.
   - **User:**
-    - View current and previous checkpoints.
-    - No modification rights on checkpoints or leaderboard.
-
-## High Priority (Current Iteration)
-- Fix Main Menu: map not visible, ensure markers are on top. (DONE)
-- Implement conditional checkpoint visibility/clickability based on user progress. (DONE)
-- Fix Checkpoint unlocking logic in Main Menu (Bug). (DONE)
-- Remove "City Map of Utrecht" alt text display from Main Menu. (DONE)
-- Add Admin-only button to Main Menu for `GameSelection`. (DONE)
-- Remove "Game Selection" option from sidebar for non-admin users. (DONE)
-- Admins to be able to drag the pins to other positions on the map.
-- Confirm current logic for sequential checkpoint unlocking is correct and to be implemented for the rest.
-
-## Medium Priority
-- Resize the contents of pages such as 'Main menu' to the size of the browser or screen dynamically.
-
-## Game Logic
-- **Integrate Anti-Cheat System**
-- **Integrate Puzzles**
-- **Integrate Routes**
-
-## Design
-- **Create `ROUTE_RULES.md`**: Define the design rules for routes.
+    - View only current and previous checkpoints.
 
 ## Security
 - **Address Frontend Vulnerabilities:**
   - Investigate and fix the remaining vulnerabilities in the frontend's dependencies.
+- **Address Backend Vulnerabilities:**
+  - Investigate and fix the remaining vulnerabilities in the backend's dependencies.
+- **Address Login/Authentication Vulnerabilities:**
+  - Investigate and fix the remaining vulnerabilities in authentication.
+
+## Game Logic
+- **Integrate Anti-Cheat System**
+  - Integrate geo-location based anti-cheat system (use current location to check if working properly)
+  - Suggest other
+- **Integrate Puzzles**
+  - Using PUZZLES.md, integrate some basic puzzles.
+- **Integrate Routes**
+  - Using ROUTE_RULES.md, integrate some basic routes.
 
 ## Testing
 - **Thoroughly test the application.**

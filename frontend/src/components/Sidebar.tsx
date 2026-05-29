@@ -5,6 +5,8 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import HomeIcon from '@mui/icons-material/Home';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PeopleIcon from '@mui/icons-material/People';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom'; // Import Link
 
@@ -45,6 +47,30 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, toggleSidebar, drawerWid
               <SportsEsportsIcon />
             </ListItemIcon>
             <ListItemText primary="Game Selection" />
+          </ListItemButton>
+        )}
+        {user?.role === 'admin' && ( // Conditionally render for admin
+          <ListItemButton component={Link} to="/admin/checkpoints" onClick={toggleSidebar}>
+            <ListItemIcon>
+              <LocationOnIcon />
+            </ListItemIcon>
+            <ListItemText primary="Manage Checkpoints" />
+          </ListItemButton>
+        )}
+        {user?.role === 'admin' && ( // Conditionally render for admin
+          <ListItemButton component={Link} to="/admin/user-progress" onClick={toggleSidebar}>
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary="User Progress" />
+          </ListItemButton>
+        )}
+        {user?.role === 'admin' && ( // Conditionally render for admin
+          <ListItemButton component={Link} to="/admin/leaderboard" onClick={toggleSidebar}>
+            <ListItemIcon>
+              <LeaderboardIcon />
+            </ListItemIcon>
+            <ListItemText primary="Manage Leaderboard" />
           </ListItemButton>
         )}
         <ListItemButton component={Link} to="/leaderboard" onClick={toggleSidebar}> {/* Leaderboard */}

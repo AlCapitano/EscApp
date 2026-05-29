@@ -55,4 +55,15 @@ export class AdminService {
     ]);
     return { users, groups, routes, sessions };
   }
+
+  async usersProgress() {
+    return this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        unlockedCheckpoints: true,
+      },
+    });
+  }
 }

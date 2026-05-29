@@ -36,4 +36,9 @@ export class AdminController {
   async getStats() {
     return this.adminService.getSystemStats();
   }
+
+  @Get('users/progress')
+  async getUsersProgress() {
+    return this.adminService.usersProgress();
+  }
 }

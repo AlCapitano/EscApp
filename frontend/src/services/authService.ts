@@ -3,19 +3,25 @@ import { LoginDto, RegisterDto } from '../types';
 
 export const login = async (credentials: LoginDto) => {
   const response = await api.post('/auth/login', credentials);
-  // Assume response.data contains token and user info from backend
-  const { accessToken, user: backendUser } = response.data;
+  const { access_token } = response.data;
 
-  // Mock user data and role for frontend testing
-  // In a real scenario, the backend would return the user's role
-  const mockUser = {
-    id: backendUser?.id || 'mock-id',
-    username: backendUser?.username || credentials.email,
-    role: (credentials.email.includes('admin') ? 'admin' : 'user') as 'user' | 'admin', // Explicitly cast to literal type
-    completedCheckpoints: [], // Start with no checkpoints completed to test sequential unlocking
+  if (!access_token) {
+    throw new Error('Access token not received from server');
+  }
+
+  // Set the token in localStorage immediately so the next API call is authenticated
+  localStorage.setItem('token', access_token);
+
+  // Fetch the user profile using the token that is now in the api interceptor
+  const user = await getProfile();
+  
+  // Transform the user object to match the frontend's expected interface
+  const transformedUser = {
+    ...user,
+    role: user.role.toLowerCase() as 'user' | 'admin',
   };
 
-  return { accessToken, user: mockUser };
+  return { accessToken: access_token, user: transformedUser };
 };
 
 export const register = async (userInfo: RegisterDto) => {

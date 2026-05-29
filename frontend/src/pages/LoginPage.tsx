@@ -19,6 +19,7 @@ const LoginPage: React.FC = () => {
       contextLogin(accessToken, user); // Pass token and user data
       navigate('/');
     } catch (err) {
+      console.error("Login failed:", err);
       setError('Failed to login. Please check your credentials.');
     }
   };

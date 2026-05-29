@@ -33,7 +33,6 @@ docker compose up postgres --build
 ```bash
 docker compose up backend --build
 ```
-
 PS. If you prefer to run only the backend without Docker, make sure `DATABASE_URL` points to a running PostgreSQL instance and then:
 
 ```bash
@@ -81,7 +80,7 @@ The backend exposes routes such as:
 ## Notes
 - Current build focus is backend prototype, frontend prototype and game state flow.
 - Docker Compose is configured to expose the backend on port `3000`.
-- The `start_escapp.bat` script now gracefully manages Docker services using `docker-compose down -v` for shutdown and `docker-compose up -d` for startup. Aggressive `taskkill` commands for Docker Desktop or specific ports have been removed to prevent system instability.
+- The `start_escapp.bat` script now gracefully manages Docker services using `docker-compose down -v` for shutdown and `docker-compose up -d` for startup.
 - you can query if everything is running by typing 
 ```bash
 curl http://localhost:3000

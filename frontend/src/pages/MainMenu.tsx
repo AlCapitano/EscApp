@@ -3,19 +3,54 @@ import { Box, Typography, Button, IconButton } from '@mui/material'; // Import I
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import LocationOnIcon from '@mui/icons-material/LocationOn'; // Import Location icon
 import { useAuth } from '../context/AuthContext'; // Import useAuth
+import { useGame } from '../context/GameContext'; // Import useGame
+
+import DraggableCheckpoint from '../components/DraggableCheckpoint';
+import { updateCheckpoint } from '../services/checkpointService'; // Import updateCheckpoint
 
 const MainMenu: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth(); // Get user from AuthContext
+  const { user } = useAuth();
+  const { startGame } = useGame();
+  const mapRef = React.useRef<HTMLDivElement>(null);
 
-  // Hardcoded placeholder checkpoint data with approximate positions
-  const checkpoints = [
-    { id: 1, name: 'Central Station', top: '35%', left: '45%' }, // Example coordinates
-    { id: 2, name: 'Dom Tower', top: '45%', left: '55%' },
-    { id: 3, name: 'Oudegracht', top: '55%', left: '40%' },
+  const initialCheckpoints = [
+    { id: '1', name: 'Central Station', top: '35%', left: '45%', latitude: 52.089, longitude: 5.107 },
+    { id: '2', name: 'Dom Tower', top: '45%', left: '55%', latitude: 52.090, longitude: 5.121 },
+    { id: '3', name: 'Oudegracht', top: '55%', left: '40%', latitude: 52.087, longitude: 5.118 },
   ];
 
-  const handleCheckpointClick = (id: number) => {
+  const [checkpoints, setCheckpoints] = React.useState(initialCheckpoints);
+
+  const handleDragStop = (e: any, data: any, checkpointId: string) => {
+    if (mapRef.current) {
+      const mapBounds = mapRef.current.getBoundingClientRect();
+      const newLeft = ((data.x + (mapBounds.width * parseFloat(checkpoints.find(c => c.id === checkpointId)!.left) / 100)) / mapBounds.width) * 100;
+      const newTop = ((data.y + (mapBounds.height * parseFloat(checkpoints.find(c => c.id === checkpointId)!.top) / 100)) / mapBounds.height) * 100;
+
+      setCheckpoints(prev =>
+        prev.map(c =>
+          c.id === checkpointId ? { ...c, top: `${newTop}%`, left: `${newLeft}%` } : c
+        )
+      );
+
+      // TODO: Convert top/left percentages to actual lat/long and save to backend
+      updateCheckpoint(checkpointId, {
+        // latitude: newLat, 
+        // longitude: newLong
+      }).catch(err => console.error("Failed to update checkpoint position", err));
+    }
+  };
+  
+  const handleCheckpointClick = async (id: string) => {
+    const numericId = parseInt(id, 10);
+    // TODO: Use dynamic groupId and routeId
+    const groupId = user?.id || '00000000-0000-0000-0000-000000000000'; // Placeholder
+    const routeId = '00000000-0000-0000-0000-000000000000'; // Placeholder for the route being played
+
+    if (numericId === 1) {
+      await startGame(groupId, routeId);
+    }
     navigate(`/game/${id}`);
   };
 
@@ -25,25 +60,23 @@ const MainMenu: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-between', // Distribute space between items
-        minHeight: 'calc(100vh - 64px - 64px)', // Adjust for AppBar and Container margin
+        justifyContent: 'space-between',
+        minHeight: 'calc(100vh - 64px - 64px)',
         textAlign: 'center',
         padding: 2,
       }}
     >
-      {/* "Welcome to EscApp" text on top */}
       <Typography variant="h3" component="h1" gutterBottom sx={{ color: 'white', textShadow: '2px 2px 4px rgba(0,0,0,0.7)', mt: 2 }}>
         Welcome to EscApp
       </Typography>
 
-      {/* Map underneath with interactive markers */}
       <Box
+        ref={mapRef}
         sx={{
-          flexGrow: 1, // Allows map to take available space
+          flexGrow: 1,
           width: '100%',
-          maxWidth: '600px', // Max width of the map container
-          position: 'relative', // For positioning markers absolutely
-          // Removed aspectRatio from here
+          maxWidth: '600px',
+          position: 'relative',
           margin: '20px 0',
           display: 'flex',
           justifyContent: 'center',
@@ -52,60 +85,49 @@ const MainMenu: React.FC = () => {
       >
         <img
           src="/City_Map_Utrecht.webp"
-          alt="Utrecht City Map" // Simplified alt text
+          alt="Utrecht City Map"
           style={{
-            display: 'block', // Ensure it's a block element
+            display: 'block',
             width: '100%',
-            height: 'auto', // Maintain aspect ratio
-            maxWidth: '100%', // Scale down if wider than parent
-            maxHeight: 'calc(100vh - 250px)', // Adjust max height based on screen size minus other elements
+            height: 'auto',
+            maxWidth: '100%',
+            maxHeight: 'calc(100vh - 250px)',
             objectFit: 'contain',
-            backgroundColor: 'grey', // Added explicit background color for debugging if image doesn't load
+            backgroundColor: 'grey',
           }}
         />
         {checkpoints.map((checkpoint) => {
-          const isFirstCheckpoint = checkpoint.id === 1;
-          const isPreviousCheckpointCompleted = user?.completedCheckpoints?.includes(checkpoint.id - 1);
-          const isCheckpointUnlocked = isFirstCheckpoint || (user?.completedCheckpoints?.includes(checkpoint.id - 1));
+          const isFirstCheckpoint = checkpoint.id === '1';
+          const isCheckpointUnlocked = isFirstCheckpoint || user?.unlockedCheckpoints?.includes(parseInt(checkpoint.id, 10) - 1);
 
-          // Visual styling for locked/unlocked
-          const iconColor = isCheckpointUnlocked ? 'primary.main' : 'grey.600';
-          const buttonProps: any = isCheckpointUnlocked ? { onClick: () => handleCheckpointClick(checkpoint.id) } : { disabled: true };
+          if (!isCheckpointUnlocked) {
+            return null;
+          }
 
           return (
-            <IconButton
+            <DraggableCheckpoint
               key={checkpoint.id}
-              sx={{
-                position: 'absolute',
-                top: checkpoint.top,
-                left: checkpoint.left,
-                transform: 'translate(-50%, -50%)', // Center the icon
-                color: iconColor, // Color based on unlocked status
-                zIndex: 1, // Ensure icon is above the map
-                cursor: isCheckpointUnlocked ? 'pointer' : 'not-allowed', // Change cursor for locked items
-              }}
-              {...buttonProps}
-              title={checkpoint.name + (isCheckpointUnlocked ? '' : ' (Locked)')}
-            >
-              <LocationOnIcon fontSize="large" />
-            </IconButton>
+              checkpoint={checkpoint}
+              isAdmin={user?.role === 'admin'}
+              onDragStop={handleDragStop}
+              onClick={handleCheckpointClick}
+            />
           );
         })}
       </Box>
 
-      {/* Buttons at the bottom */}
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
-          mb: 2, // Margin bottom
+          mb: 2,
           width: '100%',
-          maxWidth: '200px', // Limit button width
+          maxWidth: '200px',
         }}
       >
-        {user?.role === 'admin' && ( // Only show if user is admin
-          <Button variant="contained" component={Link} to="/game-selection" sx={{ backgroundColor: 'secondary.main', '&:hover': { backgroundColor: 'secondary.dark' } }}>
+        {user?.role === 'admin' && (
+          <Button variant="contained" component={Link} to="/admin/checkpoints" sx={{ backgroundColor: 'secondary.main', '&:hover': { backgroundColor: 'secondary.dark' } }}>
             Go to Admin Page
           </Button>
         )}
@@ -116,5 +138,6 @@ const MainMenu: React.FC = () => {
     </Box>
   );
 };
+
 
 export default MainMenu;

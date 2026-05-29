@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 
 // Define a simple User interface
-interface User {
+export interface User {
   id: string;
-  username: string;
+  name: string; // Changed from username
   role: 'user' | 'admin';
-  completedCheckpoints: number[]; // Added for progress tracking
+  unlockedCheckpoints: number[];
 }
 
 interface AuthContextType {
@@ -28,9 +28,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (token && storedUser) {
       try {
         const parsedUser: User = JSON.parse(storedUser);
-        // Ensure completedCheckpoints is always an array
-        if (!parsedUser.completedCheckpoints) {
-          parsedUser.completedCheckpoints = [1]; // Default for older user data
+        // Ensure unlockedCheckpoints is always an array
+        if (!parsedUser.unlockedCheckpoints) {
+          parsedUser.unlockedCheckpoints = [1]; // Default for older user data or new users
         }
         setIsAuthenticated(true);
         setUser(parsedUser);
@@ -42,10 +42,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = (token: string, userData: User) => {
-    // Ensure completedCheckpoints is always an array, default to [1] if not provided
+    // Ensure unlockedCheckpoints is always an array, default to [1] if not provided
     const userWithProgress: User = {
       ...userData,
-      completedCheckpoints: userData.completedCheckpoints || [1], // Unlock first checkpoint by default
+      unlockedCheckpoints: userData.unlockedCheckpoints || [1], // Unlock first checkpoint by default
     };
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userWithProgress)); // Store user data
@@ -65,8 +65,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!prevUser) return null;
 
       // Ensure the checkpoint is not added multiple times and maintain order
-      const newCompletedCheckpoints = [...new Set([...prevUser.completedCheckpoints, checkpointId])].sort((a, b) => a - b);
-      const updatedUser = { ...prevUser, completedCheckpoints: newCompletedCheckpoints };
+      const newUnlockedCheckpoints = [...new Set([...prevUser.unlockedCheckpoints, checkpointId])].sort((a, b) => a - b);
+      const updatedUser = { ...prevUser, unlockedCheckpoints: newUnlockedCheckpoints };
       localStorage.setItem('user', JSON.stringify(updatedUser)); // Update localStorage
       return updatedUser;
     });

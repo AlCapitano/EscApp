@@ -83,4 +83,24 @@ export class GameSessionService {
       data,
     });
   }
+
+  async deleteSession(id: string) {
+    // First, verify the session exists
+    await this.getSession(id);
+    try {
+      return await this.prisma.gameSession.delete({
+        where: { id },
+      });
+    } catch (error) {
+      console.error("Prisma delete error:", error);
+      if (error instanceof Error) {
+        throw new BadRequestException("Failed to delete session due to a database error.", error.message);
+      }
+      throw new BadRequestException("Failed to delete session due to an unknown database error.");
+    }
+  }
+
+  async deleteAllSessions() {
+    return this.prisma.gameSession.deleteMany({});
+  }
 }

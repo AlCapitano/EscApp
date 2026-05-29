@@ -8,6 +8,7 @@
 6.  **Knowledge Gaps:** If there is a gap within the project's scope, the user will make a decision after I provide additional information before taking action.
 7.  **Design rules:** I will keep to the design rules subsets  when i'm editing or designing something for that section of the project.
 8.  **Changes check:** When functional changes are made, I check them by running the application, or running a test using the application.
+9.  **Listen well:** When I hear that I'm repeating myself, refamiliarise myself with the current action that i should be taking and reread the feedback from the prompt message.
 
 # Design Rules Subsets
 

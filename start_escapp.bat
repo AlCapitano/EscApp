@@ -15,7 +15,7 @@ docker-compose up -d
 
 REM Wait for backend to be ready (optional, but good practice)
 echo Waiting for backend to start...
-timeout /t 20 /nobreak > NUL
+timeout /t 8 /nobreak > NUL
 
 REM Start frontend
 echo Starting frontend...
@@ -25,7 +25,7 @@ REM --- 3. Opens up the localhost:3001 url in the users default browser ---
 
 REM Wait for frontend to be ready (optional, but good practice)
 echo Waiting for frontend to compile...
-timeout /t 60 /nobreak > NUL
+timeout /t 7 /nobreak > NUL
 
 echo Opening http://localhost:3001 in your default browser...
 start http://localhost:3001

@@ -1,7 +1,11 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { GameSessionService } from './game-session.service';
 import { CreateGameSessionDto } from './dto/create-game-session.dto';
 import { UpdateGameStateDto } from './dto/update-game-state.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '../auth/role.enum';
 
 @Controller('game-sessions')
 export class GameSessionController {
@@ -44,5 +48,21 @@ export class GameSessionController {
   @Patch(':id/state')
   transition(@Param('id') id: string, @Body() dto: UpdateGameStateDto) {
     return this.gameSessionService.transitionState(id, dto.targetState);
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  remove(@Param('id') id: string) {
+    console.log(`[Admin] Attempting to delete session with ID: ${id}`);
+    return this.gameSessionService.deleteSession(id);
+  }
+
+  @Delete()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  removeAll() {
+    console.log('[Admin] Attempting to delete all sessions');
+    return this.gameSessionService.deleteAllSessions();
   }
 }

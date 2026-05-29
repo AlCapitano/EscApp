@@ -35,6 +35,7 @@ model User {
   hashedRefreshToken String?
   name               String?
   role               Role           @default(PLAYER)
+  unlockedCheckpoints Int[]          @default([1])
   groups             GroupMember[]
   ledGroups          Group[]
   createdAt          DateTime       @default(now())
@@ -43,7 +44,7 @@ model User {
 
 model Group {
   id          String         @id @default(uuid())
-  name        String
+  name        String         @unique
   leader      User           @relation(fields: [leaderId], references: [id])
   leaderId    String
   members     GroupMember[]
@@ -66,7 +67,7 @@ model GroupMember {
 
 model Route {
   id          String       @id @default(uuid())
-  name        String
+  name        String       @unique
   city        String
   description String?
   checkpoints Checkpoint[]
@@ -117,7 +118,7 @@ model GameSession {
 
 model CheckpointAttempt {
   id           String      @id @default(uuid())
-  session      GameSession @relation(fields: [sessionId], references: [id])
+  session      GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId    String
   checkpoint   Checkpoint  @relation(fields: [checkpointId], references: [id])
   checkpointId String

@@ -7,6 +7,7 @@
 5.  **Best Practices:** If I can implement something that is smaller, efficient or up to date to standard best practices, I will do so.
 6.  **Knowledge Gaps:** If there is a gap within the project's scope, the user will make a decision after I provide additional information before taking action.
 7.  **Design rules:** I will keep to the design rules subsets  when i'm editing or designing something for that section of the project.
+8.  **Changes check:** When functional changes are made, I check them by running the application, or running a test using the application.
 
 # Design Rules Subsets
 

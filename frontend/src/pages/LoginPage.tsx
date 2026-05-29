@@ -14,10 +14,9 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const data = await authService.login({ email, password });
+      const { accessToken, user } = await authService.login({ email, password });
       // Assuming the login service returns a token
-      localStorage.setItem('token', data.accessToken);
-      contextLogin();
+      contextLogin(accessToken, user); // Pass token and user data
       navigate('/');
     } catch (err) {
       setError('Failed to login. Please check your credentials.');

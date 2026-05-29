@@ -16,11 +16,7 @@ const RegisterPage: React.FC = () => {
     event.preventDefault();
     try {
       await authService.register({ name, email, password });
-      // After successful registration, log the user in
-      const data = await authService.login({ email, password });
-      localStorage.setItem('token', data.accessToken);
-      contextLogin();
-      navigate('/');
+      navigate('/login'); // Redirect to login page after successful registration
     } catch (err) {
       setError('Failed to register. Please try again.');
     }

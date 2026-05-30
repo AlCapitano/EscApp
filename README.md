@@ -85,3 +85,13 @@ The backend exposes routes such as:
 ```bash
 curl http://localhost:3000
 ```
+
+## GIT
+Main is only for functional application; make a branch  if you want to make changes.
+ - Making changes while other people are also committing to master? Try to do this when ready to push:
+```bash
+git checkout main
+git pull origin main
+git merge [yourbranchnamehere]
+git push origin main
+```

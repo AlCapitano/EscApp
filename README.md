@@ -87,11 +87,24 @@ curl http://localhost:3000
 ```
 
 ## GIT
-Main is only for functional application; make a branch  if you want to make changes.
- - Making changes while other people are also committing to master? Try to do this when ready to push:
+Main is only for functional application; make a branch if you want to make changes.
+
+Check if main has done any commits/changes using
+ ```bash
+ --oneline --graph --decorate main [yourbranchnamehere]
+ ```
+No commits/changes on main OR other commits have been made that don't need to be preserved?
 ```bash
 git checkout main
-git pull origin main
-git merge [yourbranchnamehere]
+git merge --ff-only [yourbranchnamehere]
+git push origin main
+```
+Other commits have been made to main, and they need to be preserved? Rebase main into your branch first:
+```bash
+git checkout [yourbranchnamehere]
+git fetch origin
+git rebase origin/main
+git checkout main
+git merge --ff-only [yourbranchnamehere]
 git push origin main
 ```
